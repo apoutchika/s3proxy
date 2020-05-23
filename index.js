@@ -16,9 +16,9 @@ const s3 = new aws.S3({
 
 app.get('/:path(*)', (req, res, next) => {
   s3.getObject({ Bucket, Key: req.params.path }, (err, data) => {
-    if (err) {
+    if (err || data.ContentLength === 0) {
       console.error(err)
-      return res.status(404).send('Not found')
+      return res.status(404).end()
     }
 
     res.send(data.Body)
